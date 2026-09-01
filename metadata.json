@@ -1,0 +1,6 @@
+{
+  "name": "CIS College Redesign",
+  "description": "A modern, mobile-first college website homepage emphasizing a public-private partnership and secure portal access.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

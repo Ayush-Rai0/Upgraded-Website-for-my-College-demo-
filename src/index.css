@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+
+@keyframes ticker {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-ticker {
+  animation: ticker 25s linear infinite;
+  will-change: transform;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
