@@ -6,75 +6,154 @@ interface AcademicItem {
   id: string;
   title: string;
   acronym?: string;
-  type: 'degree' | 'course';
+  type: 'degree' | 'course' | 'page' | 'section' | 'portal';
   tags: string[];
+  actionType: 'navigate' | 'scroll';
+  actionTarget: string;
 }
 
 const ACADEMIC_ITEMS: AcademicItem[] = [
+  // Site Navigation & Pages
+  {
+    id: "nav_home",
+    title: "Home",
+    type: "page",
+    tags: ["home", "main", "start", "landing"],
+    actionType: "navigate",
+    actionTarget: "home"
+  },
+  {
+    id: "nav_admissions",
+    title: "Admissions & Enrollment",
+    type: "page",
+    tags: ["admission", "enroll", "apply", "application", "register", "join", "enrollment"],
+    actionType: "navigate",
+    actionTarget: "admissions"
+  },
+  {
+    id: "nav_about",
+    title: "About Us",
+    type: "section",
+    tags: ["about", "info", "history", "college", "contact"],
+    actionType: "scroll",
+    actionTarget: "about"
+  },
+  {
+    id: "nav_facilities",
+    title: "Campus Facilities",
+    type: "section",
+    tags: ["facilities", "campus", "library", "labs", "hostel", "sports"],
+    actionType: "scroll",
+    actionTarget: "facilities"
+  },
+  {
+    id: "nav_gallery",
+    title: "Photo Gallery",
+    type: "section",
+    tags: ["gallery", "photos", "images", "pictures", "events", "campus life"],
+    actionType: "scroll",
+    actionTarget: "gallery"
+  },
+  {
+    id: "nav_faq",
+    title: "Frequently Asked Questions (FAQ)",
+    type: "section",
+    tags: ["faq", "help", "questions", "support"],
+    actionType: "scroll",
+    actionTarget: "faq"
+  },
+  {
+    id: "nav_portal",
+    title: "Student Portal Login",
+    type: "portal",
+    tags: ["login", "portal", "student", "dashboard", "account", "signin"],
+    actionType: "scroll",
+    actionTarget: "home" // Scrolling home usually shows the hero which might have it or just takes them there
+  },
   // Degrees & Major Programs
   {
     id: "bca",
     title: "Bachelor of Computer Applications (BCA)",
     acronym: "BCA",
     type: "degree",
-    tags: ["degree", "program", "undergraduate", "bachelor", "cs", "computer", "it", "coding", "software", "development"]
+    tags: ["degree", "program", "undergraduate", "bachelor", "cs", "computer", "it", "coding", "software", "development"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "bba",
     title: "Bachelor of Business Administration (BBA)",
     acronym: "BBA",
     type: "degree",
-    tags: ["degree", "program", "undergraduate", "bachelor", "business", "management", "corporate"]
+    tags: ["degree", "program", "undergraduate", "bachelor", "business", "management", "corporate"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "bcom",
     title: "B.Com (Accounting & Finance)",
     acronym: "BCOM",
     type: "degree",
-    tags: ["degree", "program", "undergraduate", "bachelor", "commerce", "accounting", "finance"]
+    tags: ["degree", "program", "undergraduate", "bachelor", "commerce", "accounting", "finance"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   // Academic Modules / Courses
   {
     id: "cs101",
     title: "Introduction to Computer Science",
     type: "course",
-    tags: ["course", "programming", "tech", "computer", "software"]
+    tags: ["course", "programming", "tech", "computer", "software"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "calc",
     title: "Advanced Calculus",
     type: "course",
-    tags: ["course", "math", "mathematics"]
+    tags: ["course", "math", "mathematics"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "dsa",
     title: "Data Structures and Algorithms",
     type: "course",
-    tags: ["course", "programming", "algorithms", "tech", "bca"]
+    tags: ["course", "programming", "algorithms", "tech", "bca"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "cyber",
     title: "Cybersecurity Principles",
     type: "course",
-    tags: ["course", "tech", "security", "bca", "networks"]
+    tags: ["course", "tech", "security", "bca", "networks"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "webdev",
     title: "Web Technologies & Development",
     type: "course",
-    tags: ["course", "programming", "web", "frontend", "backend", "bca"]
+    tags: ["course", "programming", "web", "frontend", "backend", "bca"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "dbms",
     title: "Database Management Systems",
     type: "course",
-    tags: ["course", "database", "sql", "tech", "bca"]
+    tags: ["course", "database", "sql", "tech", "bca"],
+    actionType: "scroll",
+    actionTarget: "courses"
   },
   {
     id: "finance",
     title: "Financial Accounting",
     type: "course",
-    tags: ["course", "business", "accounting", "finance", "commerce"]
+    tags: ["course", "business", "accounting", "finance", "commerce"],
+    actionType: "scroll",
+    actionTarget: "courses"
   }
 ];
 
@@ -90,7 +169,11 @@ const SYNONYM_MAP: Record<string, string[]> = {
   "math": ["calculus", "algebra", "mathematics"],
   "programming": ["computer", "algorithms", "software", "coding", "webdev"],
   "coding": ["programming", "computer", "bca", "software"],
-  "tech": ["computer", "cybersecurity", "technology", "bca"]
+  "tech": ["computer", "cybersecurity", "technology", "bca"],
+  "admission": ["admissions", "enroll", "apply", "register"],
+  "enroll": ["admissions", "enrollment", "apply"],
+  "contact": ["about", "help", "support", "faq"],
+  "photos": ["gallery", "pictures", "images", "campus life"]
 };
 
 export default function Header() {
@@ -216,8 +299,15 @@ export default function Header() {
     setShowSuggestions(false);
     setIsOpen(false);
 
-    // Smooth scroll to the courses/programs section
-    window.dispatchEvent(new CustomEvent('trigger-loading', { detail: 'courses' }));
+    if (item.actionType === 'navigate') {
+      window.dispatchEvent(new CustomEvent('navigate', { detail: item.actionTarget }));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.dispatchEvent(new CustomEvent('navigate', { detail: 'home' }));
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('trigger-loading', { detail: item.actionTarget }));
+      }, 50);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -315,7 +405,13 @@ export default function Header() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold">{item.title}</span>
-                    <span className="text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 font-bold">
+                    <span className={`text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded font-bold ${
+                      item.type === 'page' || item.type === 'section' 
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-200'
+                        : item.type === 'portal'
+                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-200'
+                        : 'bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200'
+                    }`}>
                       {item.type}
                     </span>
                   </div>
