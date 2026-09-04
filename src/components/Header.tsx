@@ -256,12 +256,22 @@ export default function Header() {
   const scrollToSection = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     setIsOpen(false);
-    window.dispatchEvent(new CustomEvent('trigger-loading', { detail: id }));
+    window.dispatchEvent(new CustomEvent('navigate', { detail: 'home' }));
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('trigger-loading', { detail: id }));
+    }, 50);
   };
 
-  const handleLinkClick = (e: React.MouseEvent) => {
+  const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.dispatchEvent(new CustomEvent('show-alert', { detail: 'Page under construction' }));
+    window.dispatchEvent(new CustomEvent('navigate', { detail: 'home' }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('navigate', { detail: 'admissions' }));
+    setIsOpen(false);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -336,7 +346,7 @@ export default function Header() {
 
       <header className="bg-blue-900/85 dark:bg-gray-900/85 backdrop-blur-md h-24 px-4 sm:px-8 flex items-center justify-between border-b-4 border-red-700 dark:border-red-600 shadow-lg sticky top-0 z-50 shrink-0 transition-colors">
         <div className="max-w-7xl mx-auto w-full flex justify-between items-center h-full">
-          <div className="flex items-center gap-4 cursor-pointer" onClick={handleLinkClick}>
+          <div className="flex items-center gap-4 cursor-pointer" onClick={handleLogoClick}>
             <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center border-2 border-gray-200 dark:border-gray-700 shadow-inner transition-colors overflow-hidden p-2">
               <img
                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a8a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z'/%3E%3C/svg%3E"
@@ -389,7 +399,7 @@ export default function Header() {
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
-            <button onClick={handleLinkClick} className="bg-red-700 dark:bg-red-600 hover:bg-red-800 dark:hover:bg-red-700 text-white px-5 py-2 rounded-full text-xs font-bold transition-all shadow-md ml-2">
+            <button onClick={handleApplyClick} className="bg-red-700 dark:bg-red-600 hover:bg-red-800 dark:hover:bg-red-700 text-white px-5 py-2 rounded-full text-xs font-bold transition-all shadow-md ml-2">
               APPLY NOW
             </button>
           </nav>
@@ -461,7 +471,7 @@ export default function Header() {
                   </a>
                 ))}
 
-                <button onClick={handleLinkClick} className="w-full mt-2 bg-red-700 dark:bg-red-600 hover:bg-red-800 dark:hover:bg-red-700 text-white px-4 py-3 rounded-lg text-sm font-bold transition-all shadow-md uppercase tracking-wider">
+                <button onClick={handleApplyClick} className="w-full mt-2 bg-red-700 dark:bg-red-600 hover:bg-red-800 dark:hover:bg-red-700 text-white px-4 py-3 rounded-lg text-sm font-bold transition-all shadow-md uppercase tracking-wider">
                   APPLY NOW
                 </button>
               </div>

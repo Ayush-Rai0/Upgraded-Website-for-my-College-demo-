@@ -9,9 +9,22 @@ import FAQ from './components/FAQ';
 import ContactFooter from './components/ContactFooter';
 import ToastAlert from './components/ToastAlert';
 import SkeletonLoader from './components/SkeletonLoader';
+import Admissions from './components/Admissions';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState('home');
+
+  useEffect(() => {
+    const handleNavigate = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      setCurrentPage(customEvent.detail);
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener('navigate', handleNavigate);
+    return () => window.removeEventListener('navigate', handleNavigate);
+  }, []);
 
   useEffect(() => {
     // Initial load
@@ -62,12 +75,18 @@ export default function App() {
         <SkeletonLoader />
       ) : (
         <main className="flex-1 flex flex-col w-full animate-fadeIn">
-          <Hero />
-          <LoginPortal />
-          <FeaturedPrograms />
-          <Gallery />
-          <Facilities />
-          <FAQ />
+          {currentPage === 'home' ? (
+            <>
+              <Hero />
+              <LoginPortal />
+              <FeaturedPrograms />
+              <Gallery />
+              <Facilities />
+              <FAQ />
+            </>
+          ) : currentPage === 'admissions' ? (
+            <Admissions />
+          ) : null}
         </main>
       )}
       

@@ -6,6 +6,11 @@ export default function Hero() {
     window.dispatchEvent(new CustomEvent('show-alert', { detail: 'Page under construction' }));
   };
 
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('navigate', { detail: 'admissions' }));
+  };
+
   return (
     <section id="home" className="p-4 md:p-6 pb-0">
       <div className="rounded-3xl bg-blue-900/5 dark:bg-gray-800/40 border border-blue-900/10 dark:border-gray-700 p-8 md:p-12 lg:p-16 flex flex-col justify-end relative overflow-hidden shadow-sm min-h-[500px] transition-colors">
@@ -25,7 +30,7 @@ export default function Hero() {
             <button onClick={handleLinkClick} className="bg-red-700 dark:bg-red-600 hover:bg-red-800 dark:hover:bg-red-700 text-white px-8 py-4 rounded-full font-bold text-xs transition-all shadow-md w-full sm:w-auto text-center tracking-wider">
               EXPLORE PROGRAMS
             </button>
-            <button onClick={handleLinkClick} className="bg-transparent border border-white dark:border-gray-400 hover:bg-white dark:hover:bg-gray-200 hover:text-blue-900 dark:hover:text-gray-900 text-white dark:text-gray-200 px-8 py-4 rounded-full font-bold text-xs transition-all w-full sm:w-auto text-center tracking-wider">
+            <button onClick={handleApplyClick} className="bg-transparent border border-white dark:border-gray-400 hover:bg-white dark:hover:bg-gray-200 hover:text-blue-900 dark:hover:text-gray-900 text-white dark:text-gray-200 px-8 py-4 rounded-full font-bold text-xs transition-all w-full sm:w-auto text-center tracking-wider">
               APPLY FOR ADMISSION
             </button>
           </div>
