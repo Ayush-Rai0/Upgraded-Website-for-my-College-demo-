@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, GraduationCap, AlertCircle, Search, Moon, Sun } from 'lucide-react';
+import { Menu, X, AlertCircle, Search, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Header() {
@@ -19,8 +19,16 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    // Check initial theme
-    setIsDark(document.documentElement.classList.contains('dark'));
+    const savedTheme = localStorage.getItem('theme');
+    const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && isSystemDark);
+    
+    setIsDark(shouldBeDark);
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
 
   useEffect(() => {
@@ -44,6 +52,7 @@ export default function Header() {
   const toggleTheme = () => {
     const nextTheme = !isDark;
     setIsDark(nextTheme);
+    localStorage.setItem('theme', nextTheme ? 'dark' : 'light');
     if (nextTheme) {
       document.documentElement.classList.add('dark');
     } else {
@@ -127,7 +136,11 @@ export default function Header() {
               </button>
             </form>
 
-            <button onClick={toggleTheme} className="text-white p-2 hover:bg-blue-800 dark:hover:bg-gray-800 rounded-md transition-colors" aria-label="Toggle theme">
+            <button 
+              onClick={toggleTheme} 
+              className="flex items-center justify-center text-white p-2 hover:bg-blue-800 dark:hover:bg-gray-800 rounded-md transition-colors" 
+              aria-label="Toggle theme"
+            >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
@@ -137,8 +150,12 @@ export default function Header() {
           </nav>
 
           {/* Mobile Nav Toggle */}
-          <div className="lg:hidden flex items-center gap-4">
-            <button onClick={toggleTheme} className="text-white p-2 hover:bg-blue-800 dark:hover:bg-gray-800 rounded-md transition-colors" aria-label="Toggle theme">
+          <div className="lg:hidden flex items-center gap-2">
+            <button 
+              onClick={toggleTheme} 
+              className="text-white p-2 hover:bg-blue-800 dark:hover:bg-gray-800 rounded-md transition-colors flex items-center justify-center" 
+              aria-label="Toggle theme"
+            >
               {isDark ? <Sun size={24} /> : <Moon size={24} />}
             </button>
             <button className="text-white p-2 hover:bg-blue-800 dark:hover:bg-gray-800 rounded-md transition-colors" aria-label="Search mobile" onClick={handleLinkClick}>
