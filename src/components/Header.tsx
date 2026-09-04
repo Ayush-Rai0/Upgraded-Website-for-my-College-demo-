@@ -20,15 +20,31 @@ export default function Header() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && isSystemDark);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
+    // Initial setup
+    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && mediaQuery.matches);
     setIsDark(shouldBeDark);
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    // Listen for system theme changes
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('theme')) {
+        setIsDark(e.matches);
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {
